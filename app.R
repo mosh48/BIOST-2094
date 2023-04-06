@@ -16,8 +16,8 @@ sidebarLayout(
   sidebarPanel(
     #alcohol type input
     checkboxGroupInput(inputId="alcohol",
-                       label="Choose your alcohol preference(s):",
-                       choices=c("Vodka", "Gin", "Rum", "Tequila", "Whiskey", "No Preference")),
+                       label="Choose your alcohol preference(s). If you have no preference, check all boxes:",
+                       choices=c("Vodka", "Gin", "Rum", "Tequila", "Whiskey")),
     
     #sweetness slider
     sliderInput(inputId = "Sweetness",
@@ -27,10 +27,10 @@ sidebarLayout(
                 value = 3),
     
     #alcohol content slider
-    sliderInput(inputId = "ABV (%)",
+    sliderInput(inputId = "ABV",
                 label = "Choose your preferred alcohol content:",
-                min = 9,
-                max = 45,
+                min = min(data$ABV),
+                max = max(data$ABV),
                 value = 20), # might want to do intervals of 5 or something
     
     #flavors input
