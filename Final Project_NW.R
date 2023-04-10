@@ -1,12 +1,9 @@
-
+#load packages
 library(openxlsx)
 library(shiny)
 library(readxl)
 library(dslabs)
 library(tidyverse)
-
-
-#load shiny and readxl packages
 
 #images
 setwd("E:/University of Pittsburgh/BIOST 2094 Advanced R Computing/Project/")

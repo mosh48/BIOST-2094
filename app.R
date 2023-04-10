@@ -1,6 +1,7 @@
-#load shiny and readxl packages
+#load shiny, readxl, and tidyverse packages
 library(shiny)
 library(readxl)
+library(tidyverse)
 
 #load data
 data <- read_excel("ProjectData.xlsx")
@@ -15,7 +16,7 @@ sidebarLayout(
   
   sidebarPanel(
     #alcohol type input
-    checkboxGroupInput(inputId="alcohol",
+    checkboxGroupInput(inputId="Alcohol",
                        label="Choose your alcohol preference(s). If you have no preference, check all boxes:",
                        choices=c("Vodka", "Gin", "Rum", "Tequila", "Whiskey")),
     
@@ -47,6 +48,7 @@ sidebarLayout(
   ),
   #main panel for displaying outputs
   mainPanel(
+    
     
   )
 )
