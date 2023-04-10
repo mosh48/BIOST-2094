@@ -6,7 +6,6 @@ library(tidyverse)
 #load data
 data <- read_excel("ProjectData.xlsx")
 Flavors <- unique(unlist(strsplit(data$Flavors, ", ")))
-data2 <- data %>% filter(!grepl("Ginger", Flavors))
 
 #define UI
 ui <- fluidPage(
