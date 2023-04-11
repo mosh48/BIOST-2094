@@ -55,7 +55,7 @@ sidebarLayout(
   ),
   #main panel for displaying outputs
   mainPanel(
-    uiOutput("Cocktails")
+    imageOutput("Images")
     
   )
 )
@@ -64,7 +64,7 @@ sidebarLayout(
 #define server logic
 server <- function(input, output) {
   
-  drinkFilter <- reactive({
+  output$Images <- renderImage({
     #alcohol type filter
     if(input$Alcohol!="Vodka"){
       data %>% filter(Alcohol!="Vodka")}
@@ -134,6 +134,75 @@ server <- function(input, output) {
       data %>% filter(!grepl("Licorice", Flavors))}
     if(!"Honey"%in%input$Flavors){
       data %>% filter(!grepl("Honey", Flavors))}
+    
+    
+    #build output list for cocktail images
+    cocktails <- list()
+    
+    if("Cosmopolitan"%in%data$Name){
+      cocktails <- append(cocktails,"image1.png")}
+    if("Bloody Mary"%in%data$Name){
+      cocktails <- append(cocktails,"image2.png")}
+    if("Moscow Mule"%in%data$Name){
+      cocktails <- append(cocktails,"image3.png")}
+    if("Lemon Drop Martini"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-3.png")}
+    if("Espresso Martini"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-4.png")}
+    if("Sea Breeze"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-5.png")}
+    
+    if("Gimlet"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-6.png")}
+    if("Last Word"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-7.png")}
+    if("Negroni"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-8.png")}
+    if("French 75"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-9.png")}
+    if("Aviation"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-10.png")}
+    if("Tom Collins"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-11.png")}
+    
+    if("Dark and Stormy"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-12.png")}
+    if("Rum Runner"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-13.png")}
+    if("Daiquiri"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-14.png")}
+    if("Pina Colada"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-15.png")}
+    if("Mai Tai"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-16.png")}
+    if("Mojito"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-17.png")}
+    
+    if("Margarita"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-18.png")}
+    if("Paloma"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-19.png")}
+    if("Tequila Sunrise"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-20.png")}
+    if("El Diablo"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-21.png")}
+    if("Naked and Famous"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-22.png")}
+    if("Bloody Maria"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-23.png")}
+    
+    if("Manhattan"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-24.png")}
+    if("Old Fashioned"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-25.png")}
+    if("Sazerac"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-26.png")}
+    if("Mint Julep"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-27.png")}
+    if("Penicillin"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-28.png")}
+    if("Paper Plane"%in%data$Name){
+      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-29.png")}
   })
 
 }
