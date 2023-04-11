@@ -90,119 +90,97 @@ server <- function(input, output) {
       data %>% filter(Sweetness>4)}
     
     #flavor filter
-    if(!"Orange"%in%input$Flavors){
-      data %>% filter(!grepl("Orange", Flavors))}
-    if(!"Lime"%in%input$Flavors){
-      data %>% filter(!grepl("Lime", Flavors))}
-    if(!"Lemon"%in%input$Flavors){
-      data %>% filter(!grepl("Lemon", Flavors))}
-    if(!"Cranberry"%in%input$Flavors){
-      data %>% filter(!grepl("Cranberry", Flavors))}
-    if(!"Tomato"%in%input$Flavors & !"Hot Sauce"%in%input$Flavors & !"Pepper"%in%input$Flavors){
-      data %>% filter(!grepl("Tomato", Flavors)) %>% filter(!grepl("Hot Sauce", Flavors)) %>% filter(!grepl("Pepper", Flavors))}
-    if(!"Ginger"%in%input$Flavors){
-      data %>% filter(!grepl("Ginger", Flavors))}
-    if(!"Coffee"%in%input$Flavors & !"Chocolate"%in%input$Flavors){
-      data %>% filter(!grepl("Coffee", Flavors)) %>% filter(!grepl("Chocolate", Flavors))}
-    if(!"Grapefruit"%in%input$Flavors){
-      data %>% filter(!grepl("Grapefruit", Flavors))}
-    if(!"Herbal"%in%input$Flavors){
-      data %>% filter(!grepl("Herbal", Flavors))}
-    if(!"Cherry"%in%input$Flavors){
-      data %>% filter(!grepl("Cherry", Flavors))}
-    if(!"Bitter"%in%input$Flavors){
-      data %>% filter(!grepl("Bitter", Flavors))}
-    if(!"Spiced"%in%input$Flavors){
-      data %>% filter(!grepl("Spiced", Flavors))}
-    if(!"Violet"%in%input$Flavors){
-      data %>% filter(!grepl("Violet", Flavors))}
-    if(!"Banana"%in%input$Flavors){
-      data %>% filter(!grepl("Banana", Flavors))}
-    if(!"Blackberry"%in%input$Flavors){
-      data %>% filter(!grepl("Blackberry", Flavors))}
-    if(!"Pineapple"%in%input$Flavors){
-      data %>% filter(!grepl("Pineapple", Flavors))}
-    if(!"Coconut"%in%input$Flavors){
-      data %>% filter(!grepl("Coconut", Flavors))}
-    if(!"Almond"%in%input$Flavors){
-      data %>% filter(!grepl("Almond", Flavors))}
-    if(!"Mint"%in%input$Flavors){
-      data %>% filter(!grepl("Mint", Flavors))}
-    if(!"Pomegranite"%in%input$Flavors){
-      data %>% filter(!grepl("Pomegranite", Flavors))}
-    if(!"Licorice"%in%input$Flavors){
-      data %>% filter(!grepl("Licorice", Flavors))}
-    if(!"Honey"%in%input$Flavors){
-      data %>% filter(!grepl("Honey", Flavors))}
     
+    data <- ifelse(!"Orange"%in%input$Flavors, data %>% filter(!grepl("Orange", Flavors)), data)
+    data <- ifelse(!"Lime"%in%input$Flavors, data %>% filter(!grepl("Lime", Flavors)), data)
+    data <- ifelse(!"Lemon"%in%input$Flavors, data %>% filter(!grepl("Lemon", Flavors)), data)
+    data <- ifelse(!"Cranberry"%in%input$Flavors, data %>% filter(!grepl("Cranberry", Flavors)), data)
+    data <- ifelse(!"Tomato"%in%input$Flavors & !"Hot Sauce"%in%input$Flavors & !"Pepper"%in%input$Flavors, 
+                   data %>% filter(!grepl("Tomato", Flavors)) %>% filter(!grepl("Hot Sauce", Flavors)) %>% filter(!grepl("Pepper", Flavors)), data)
+    data <- ifelse(!"Ginger"%in%input$Flavors, data %>% filter(!grepl("Ginger", Flavors)), data)
+    data <- ifelse(!"Coffee"%in%input$Flavors & !"Chocolate"%in%input$Flavors, 
+                   data %>% filter(!grepl("Coffee", Flavors)) %>% filter(!grepl("Chocolate", Flavors)), data)
+    data <- ifelse(!"Grapefruit"%in%input$Flavors, data %>% filter(!grepl("Grapefruit", Flavors)), data)
+    data <- ifelse(!"Herbal"%in%input$Flavors, data %>% filter(!grepl("Herbal", Flavors)), data)
+    data <- ifelse(!"Cherry"%in%input$Flavors, data %>% filter(!grepl("Cherry", Flavors)), data)
+    data <- ifelse(!"Bitter"%in%input$Flavors, data %>% filter(!grepl("Bitter", Flavors)), data)
+    data <- ifelse(!"Spiced"%in%input$Flavors, data %>% filter(!grepl("Spiced", Flavors)), data) 
+    data <- ifelse(!"Violet"%in%input$Flavors, data %>% filter(!grepl("Violet", Flavors)), data)
+    data <- ifelse(!"Banana"%in%input$Flavors, data %>% filter(!grepl("Banana", Flavors)), data)
+    data <- ifelse(!"Blackberry"%in%input$Flavors, data %>% filter(!grepl("Blackberry", Flavors)), data)
+    data <- ifelse(!"Pineapple"%in%input$Flavors, data %>% filter(!grepl("Pineapple", Flavors)), data)
+    data <- ifelse(!"Coconut"%in%input$Flavors, data %>% filter(!grepl("Coconut", Flavors)), data)
+    data <- ifelse(!"Almond"%in%input$Flavors, data %>% filter(!grepl("Almond", Flavors)), data)
+    data <- ifelse(!"Mint"%in%input$Flavors, data %>% filter(!grepl("Mint", Flavors)), data)
+    data <- ifelse(!"Pomegranite"%in%input$Flavors, data %>% filter(!grepl("Pomegranite", Flavors)), data)
+    data <- ifelse(!"Licorice"%in%input$Flavors, data %>% filter(!grepl("Licorice", Flavors)), data)
+    data <- ifelse(!"Honey"%in%input$Flavors, data %>% filter(!grepl("Honey", Flavors)), data)
     
     #build output list for cocktail images
     cocktails <- list()
     
-    if("Cosmopolitan"%in%data$Name){
-      cocktails <- append(cocktails,"image1.png")}
-    if("Bloody Mary"%in%data$Name){
-      cocktails <- append(cocktails,"image2.png")}
-    if("Moscow Mule"%in%data$Name){
-      cocktails <- append(cocktails,"image3.png")}
-    if("Lemon Drop Martini"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-3.png")}
-    if("Espresso Martini"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-4.png")}
-    if("Sea Breeze"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-5.png")}
+    cocktails <- ifelse("Cosmopolitan"%in%data$Name, append(cocktails,"image1.png"), cocktails)
+    cocktails <- ifelse("Bloody Mary"%in%data$Name, append(cocktails,"image2.png"), cocktails)
+    cocktails <- ifelse("Moscow Mule"%in%data$Name, append(cocktails,"image3.png"), cocktails)
+    cocktails <- ifelse("Lemon Drop Martini"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-3.png"), cocktails)
+    cocktails <- ifelse("Espresso Martini"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-4.png"), cocktails)
+    cocktails <- ifelse("Sea Breeze"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-5.png"), cocktails)
     
-    if("Gimlet"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-6.png")}
-    if("Last Word"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-7.png")}
-    if("Negroni"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-8.png")}
-    if("French 75"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-9.png")}
-    if("Aviation"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-10.png")}
-    if("Tom Collins"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-11.png")}
+    cocktails <- ifelse("Gimlet"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-6.png"), cocktails)
+    cocktails <- ifelse("Last Word"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-7.png"), cocktails)
+    cocktails <- ifelse("Negroni"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-8.png"), cocktails)
+    cocktails <- ifelse("French 75"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-9.png"), cocktails)
+    cocktails <- ifelse("Aviation"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-10.png"), cocktails)
+    cocktails <- ifelse("Tom Collins"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-11.png"), cocktails)
     
-    if("Dark and Stormy"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-12.png")}
-    if("Rum Runner"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-13.png")}
-    if("Daiquiri"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-14.png")}
-    if("Pina Colada"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-15.png")}
-    if("Mai Tai"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-16.png")}
-    if("Mojito"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-17.png")}
+    cocktails <- ifelse("Dark and Stormy"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-12.png"), cocktails)
+    cocktails <- ifelse("Rum Runner"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-13.png"), cocktails)
+    cocktails <- ifelse("Daiquiri"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-14.png"), cocktails)
+    cocktails <- ifelse("Pina Colada"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-15.png"), cocktails)
+    cocktails <- ifelse("Mai Tai"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-16.png"), cocktails)
+    cocktails <- ifelse("Mojito"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-17.png"), cocktails)
     
-    if("Margarita"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-18.png")}
-    if("Paloma"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-19.png")}
-    if("Tequila Sunrise"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-20.png")}
-    if("El Diablo"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-21.png")}
-    if("Naked and Famous"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-22.png")}
-    if("Bloody Maria"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-23.png")}
+    cocktails <- ifelse("Margarita"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-18.png"), cocktails)
+    cocktails <- ifelse("Paloma"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-19.png"), cocktails)
+    cocktails <- ifelse("Tequila Sunrise"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-20.png"), cocktails)
+    cocktails <- ifelse("El Diablo"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-21.png"), cocktails)
+    cocktails <- ifelse("Naked and Famous"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-22.png"), cocktails)
+    cocktails <- ifelse("Bloody Maria"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-23.png"), cocktails)
     
-    if("Manhattan"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-24.png")}
-    if("Old Fashioned"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-25.png")}
-    if("Sazerac"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-26.png")}
-    if("Mint Julep"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-27.png")}
-    if("Penicillin"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-28.png")}
-    if("Paper Plane"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-29.png")}
+    cocktails <- ifelse("Manhattan"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-24.png"), cocktails)
+    cocktails <- ifelse("Old Fashioned"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-25.png"), cocktails)
+    cocktails <- ifelse("Sazerac"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-26.png"), cocktails)
+    cocktails <- ifelse("Mint Julep"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-27.png"), cocktails)
+    cocktails <- ifelse("Penicillin"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-28.png"), cocktails)
+    cocktails <- ifelse("Paper Plane"%in%data$Name, 
+                        append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-29.png"), cocktails)
+    
   })
 
 }
