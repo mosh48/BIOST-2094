@@ -1,7 +1,8 @@
-#load shiny, readxl, and tidyverse packages
+#load appropriate packages
 library(shiny)
 library(readxl)
 library(tidyverse)
+library(jpeg)
 
 #load data
 data <- read_excel("ProjectData.xlsx")
@@ -46,8 +47,6 @@ sidebarLayout(
                        label = "Choose any flavors you would prefer:",
                        choices = unique(unlist(strsplit(data$Flavors, ", ")))),
                       #had to remove "," in column for each flavor
-                      #list might be a bit long
-      #maybe we could eliminate choices if there is not a drink that fits flavors
     
     #submit button that looks like martini glass
     submitButton(text = "Find Drinks", icon = icon(name = "martini-glass-citrus"))
@@ -168,127 +167,109 @@ server <- function(input, output) {
     data <- if(!"Honey"%in%input$Flavors){
       data <- data %>% filter(!grepl("Honey", Flavors))
     }else{data <- data}
-
-  
-    data <- ifelse(!"Blackberry"%in%input$Flavors, data %>% filter(!grepl("Blackberry", Flavors)), data)
-    data <- ifelse(!"Pineapple"%in%input$Flavors, data %>% filter(!grepl("Pineapple", Flavors)), data)
-    data <- ifelse(!"Coconut"%in%input$Flavors, data %>% filter(!grepl("Coconut", Flavors)), data)
-    data <- ifelse(!"Almond"%in%input$Flavors, data %>% filter(!grepl("Almond", Flavors)), data)
-    data <- ifelse(!"Mint"%in%input$Flavors, data %>% filter(!grepl("Mint", Flavors)), data)
-    data <- ifelse(!"Pomegranite"%in%input$Flavors, data %>% filter(!grepl("Pomegranite", Flavors)), data)
-    data <- ifelse(!"Licorice"%in%input$Flavors, data %>% filter(!grepl("Licorice", Flavors)), data)
-    data <- ifelse(!"Honey"%in%input$Flavors, data %>% filter(!grepl("Honey", Flavors)), data)
+    
     
     #build output list for cocktail images
     cocktails <- list()
     
     cocktails <- if("Cosmopolitan"%in%data$Name){
-      cocktails <- append(cocktails,"image1.png")
+      cocktails <- append(cocktails,"Project Images/image1.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Bloody Mary"%in%data$Name){
-      cocktails <- append(cocktails,"image2.png")
+      cocktails <- append(cocktails,"Project Images/image2.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Moscow Mule"%in%data$Name){
-      cocktails <- append(cocktails,"image3.png")
+      cocktails <- append(cocktails,"Project Images/image3.jpg")
     }else{cocktails <- cocktails}
-    
     cocktails <- if("Lemon Drop Martini"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-3.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-3.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Espresso Martini"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-4.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-4.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Sea Breeze"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-5.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-5.jpg")
     }else{cocktails <- cocktails}
     
     cocktails <- if("Gimlet"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-6.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-6.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Last Word"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-7.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-7.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Negroni"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-8.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-8.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("French 75"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-9.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-9.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Aviation"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-10.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-10.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Tom Collins"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-11.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-11.jpg")
     }else{cocktails <- cocktails}
     
     cocktails <- if("Dark and Stormy"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-12.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-12.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Rum Runner"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-13.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-13.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Daiquiri"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-14.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-14.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Pina Colada"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-15.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-15.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Mai Tai"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-16.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-16.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Mojito"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-17.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-17.jpg")
     }else{cocktails <- cocktails}
     
     cocktails <- if("Margarita"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-18.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-18.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Paloma"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-19.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-19.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Tequila Sunrise"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-20.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-20.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("El Diablo"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-21.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-21.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Naked and Famous"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-22.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-22.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Bloody Maria"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-23.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-23.jpg")
     }else{cocktails <- cocktails}
     
     cocktails <- if("Manhattan"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-24.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-24.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Old Fashioned"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-25.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-25.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Sazerac"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-26.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-26.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Mint Julep"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-27.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-27.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Penicillin"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-28.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-28.jpg")
     }else{cocktails <- cocktails}
     cocktails <- if("Paper Plane"%in%data$Name){
-      cocktails <- append(cocktails,"p1gtketd9rtqdqmj1rar8m41qh54-29.png")
+      cocktails <- append(cocktails,"Project Images/p1gtketd9rtqdqmj1rar8m41qh54-29.jpg")
     }else{cocktails <- cocktails}
     
   })
-
-}
-
-
-
-hi <- c("Vodka", "Gin")
-data2 <- ifelse(!"Vodka"%in%hi, data %>% filter(!grepl("Vodka", Alcohol)), data)
-
-
   
+}
 
   
 #Run the app
