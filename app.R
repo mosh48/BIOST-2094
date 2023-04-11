@@ -54,7 +54,8 @@ sidebarLayout(
   ),
   #main panel for displaying outputs
   mainPanel(
-    uiOutput("Images")
+    imageOutput("Images")
+    #tableOutput("Table")
     
   )
 )
@@ -170,8 +171,13 @@ server <- function(input, output) {
     
     })
     
+    #output$Table <- renderTable({
+      #drink_filter()
+    #})
+    
     
     #build output list for cocktail images
+    
     cocktails <- list()
     
     cocktails <- if("Cosmopolitan"%in%data$Name){
@@ -270,28 +276,38 @@ server <- function(input, output) {
     }else{cocktails <- cocktails}
     
     
-    observe({
-    for (i in length(cocktails)){
-      local({
-      j <- i
-      imagename = paste0("img", j)
-      output[[imagename]] <- renderImage({
-      list(src=cocktails[[j]], width=500, height=300)
-  }, deleteFile=FALSE)
-      })
+    #observe({
+    #for (i in 1:length(cocktails)){
+      #local({
+      #j <- i
+     # Images = cocktails[[j]]
+    #  output[[Images]] <- renderImage({
+   #   list(src=cocktails[[j]], width=500, height=300)
+  #}, deleteFile=FALSE)
+     # })
+    #}
+    #})
+    
+    
+    #output$Images <- renderUI({
+     # imageList <-
+    #    lapply(1:length(cocktails),
+     #          function(i){
+      #           Images = cocktails[[i]]
+       #          imageOutput(Images)
+        #       })
+      #do.call(tagList, imageList)
+    #})
+    
+    #i <- 1
+    for (i in 1:length(cocktails)){
+      output$Images <- renderImage({
+        list(src=cocktails[[i]], width=550, height=330)
+      }, deleteFile=FALSE)
     }
-    })
     
     
-    output$Images <- renderUI({
-      imageList <-
-        lapply(1:length(cocktails),
-               function(i){
-                 imagename = paste0("img", i)
-                 imageOutput(imagename)
-               })
-      do.call(tagList, imageList)
-    })
+    
   
 }
 
