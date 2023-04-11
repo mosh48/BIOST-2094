@@ -65,32 +65,22 @@ sidebarLayout(
 server <- function(input, output) {
   
   output$Images <- renderImage({
+    
     #alcohol type filter
-    if(input$Alcohol!="Vodka"){
-      data %>% filter(Alcohol!="Vodka")}
-    if(input$Alcohol!="Rum"){
-      data %>% filter(Alcohol!="Rum")}
-    if(input$Alcohol!="Whiskey"){
-      data %>% filter(Alcohol!="Whiskey")}
-    if(input$Alcohol!="Tequila"){
-      data %>% filter(Alcohol!="Tequila")}
-    if(input$Alcohol!="Gin"){
-      data %>% filter(Alcohol!="Gin")}
+    data <- ifelse(!"Vodka"%in%input$Alcohol, data %>% filter(!grepl("Vodka", Alcohol)), data)
+    data <- ifelse(!"Gin"%in%input$Alcohol, data %>% filter(!grepl("Gin", Alcohol)), data)
+    data <- ifelse(!"Rum"%in%input$Alcohol, data %>% filter(!grepl("Rum", Alcohol)), data)
+    data <- ifelse(!"Tequila"%in%input$Alcohol, data %>% filter(!grepl("Tequila", Alcohol)), data)
+    data <- ifelse(!"Whiskey"%in%input$Alcohol, data %>% filter(!grepl("Whiskey", Alcohol)), data)
     
     #sweetness filter
-    if(input$Sweetness==1){
-      data %>% filter(Sweetness<3)}
-    if(input$Sweetness==2){
-      data %>% filter(Sweetness<4)}
-    if(input$Sweetness==3){
-      data %>% filter(Sweetness!=1 | Sweetness!=5)}
-    if(input$Sweetness==4){
-      data %>% filter(Sweetness>3)}
-    if(input$Sweetness==5){
-      data %>% filter(Sweetness>4)}
+    data <- ifelse(input$Sweetness==1, data %>% filter(Sweetness<3), data)
+    data <- ifelse(input$Sweetness==2, data %>% filter(Sweetness<4), data)
+    data <- ifelse(input$Sweetness==3, data %>% filter(Sweetness!=1 | Sweetness!=5), data)
+    data <- ifelse(input$Sweetness==4, data %>% filter(Sweetness>3), data)
+    data <- ifelse(input$Sweetness==5, data %>% filter(Sweetness>4), data)
     
     #flavor filter
-    
     data <- ifelse(!"Orange"%in%input$Flavors, data %>% filter(!grepl("Orange", Flavors)), data)
     data <- ifelse(!"Lime"%in%input$Flavors, data %>% filter(!grepl("Lime", Flavors)), data)
     data <- ifelse(!"Lemon"%in%input$Flavors, data %>% filter(!grepl("Lemon", Flavors)), data)
