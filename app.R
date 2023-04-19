@@ -21,26 +21,13 @@ sidebarLayout(
     checkboxGroupInput(inputId="Alcohol",
                        label="Choose your alcohol preference(s). If you have no preference, check all boxes:",
                        choices=c("Vodka", "Gin", "Rum", "Tequila", "Whiskey")),
-    
-    #For now, this will only let you choose one alcohol type
-    #selectInput(inputID = "Alcohol",
-                #label="Choose your alcohol preference:",
-                #choices=unique(data$Alcohol)),
-    
-    
+   
     #sweetness slider
     sliderInput(inputId = "Sweetness",
                 label = "Choose your preferred level of sweetness:",
                 min = 1,
                 max = 5,
                 value = 3),
-    
-    #alcohol content slider. commented out for now for simplicity
-    #sliderInput(inputId = "ABV",
-                #label = "Choose your preferred alcohol content:",
-                #min = min(data$ABV),
-                #max = max(data$ABV),
-                #value = 20), # might want to do intervals of 5 or something
     
     #flavors input
     checkboxGroupInput(inputId = "Flavors",
@@ -54,8 +41,8 @@ sidebarLayout(
   ),
   #main panel for displaying outputs
   mainPanel(
-    imageOutput("Images")
-    #tableOutput("Table")
+    #imageOutput("Images")
+    tableOutput("Table")
     
   )
 )
@@ -64,7 +51,7 @@ sidebarLayout(
 #define server logic
 server <- function(input, output) {
     
-    reactive({
+    drink_filter <- reactive({
       
     #alcohol type filter
     data <- if(!"Vodka"%in%input$Alcohol){
@@ -91,7 +78,7 @@ server <- function(input, output) {
       data <- data %>% filter(Sweetness<4)
     }else{data <- data}
     data <- if(input$Sweetness==3){
-      data <- data %>% filter(Sweetness!=1 | Sweetness!=5)
+      data <- data %>% filter(Sweetness!=1 & Sweetness!=5)
     }else{data <- data}
     data <- if(input$Sweetness==4){
       data <- data %>% filter(Sweetness>3)
@@ -171,9 +158,9 @@ server <- function(input, output) {
     
     })
     
-    #output$Table <- renderTable({
-      #drink_filter()
-    #})
+    output$Table <- renderTable({
+      drink_filter()
+    })
     
     
     #build output list for cocktail images
@@ -300,15 +287,11 @@ server <- function(input, output) {
     #})
     
     #i <- 1
-    for (i in 1:length(cocktails)){
-      output$Images <- renderImage({
-        list(src=cocktails[[i]], width=550, height=330)
-      }, deleteFile=FALSE)
-    }
-    
-    
-    
-  
+    #for (i in 1:length(cocktails)){
+     # output$Images <- renderImage({
+      #  list(src=cocktails[[i]], width=550, height=330)
+      #}, deleteFile=FALSE)
+    #}
 }
 
   
