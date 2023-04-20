@@ -32,20 +32,17 @@ sidebarLayout(
     
     #flavors button
     uiOutput("FlavorsButton"),
-    #actionButton(inputId = "FlavorsButton", label = "Select a flavor"),
     
     #flavors input
     uiOutput("FlavorsRadiobox"),
     
     #submit button that looks like martini glass
     uiOutput("SubmitButton")
-    #submitButton(text = "Find Drinks", icon = icon(name = "martini-glass-citrus"))
     
   ),
   #main panel for displaying outputs
   mainPanel(
     #imageOutput("Images")
-    #tableOutput("Table")
     
     DT::dataTableOutput("Table")
   )
@@ -57,6 +54,7 @@ server <- function(input, output) {
   
   # Present sweetness slider when the SweetnessButton is clicked
   observeEvent(input$SweetnessButton, {
+    
     # Filter data based on selected alcohol
     filtered_data <- data
     if (!is.null(input$Alcohol)) {
@@ -100,17 +98,17 @@ server <- function(input, output) {
       radioButtons("FlavorsRadiobox", "Choose any flavors you would prefer:", choices = flavors)
     }) # maybe do drop down menu
     
+    # present submit button
     output$SubmitButton <- renderUI({
-      submitButton(text = "Find Drinks", icon = icon(name = "martini-glass-citrus"))
+      actionButton(inputId = "SubmitButton", label = "Find Drinks", icon = icon(name = "martini-glass-citrus"))
     })
   })
   
   
   drink_filter <- reactive({
-    #eventReactive(input$SubmitButton, {
-  
-    # Initialize reactive values to store input values
-    #vals <- reactiveValues(Alcohol = NULL, Sweetness = NULL, Flavors = NULL)
+    
+    #Adds column of image path to remaining drinks
+    #data$image <- paste0("www/", data$Name, ".jpg")
     
     # Filter cocktails based on user preferences
     filtered <- data
@@ -125,32 +123,42 @@ server <- function(input, output) {
     if (!is.null(input$FlavorsRadiobox)) {
       filtered <- filtered[str_detect(filtered$Flavors, input$FlavorsRadiobox),]
     }
+    
     #Adds column of image path to remaining drinks
-    filtered$image <- paste0("www/", filtered$Name, ".jpg")
+    #filtered$image <- paste0("www/", filtered$Name, ".jpg")
     
+    #filtered <- data[data$image != "", ]
     filtered
-    #return(filtered)
-    
-    # Problem: Does not return drinks after flavor picked
     
   })
   
-  # Update input values when submit button is clicked
-  #observeEvent(input$SubmitButton, {
-    #vals$Alcohol <- input$Alcohol
-    #vals$Sweetness <- input$Sweetness
-    #vals$Flavors <- input$Flavors
-  #})
-  
-  output$Table <- DT::renderDataTable({
-    drink_filter()
+  # output table when submit button clicked
+  observeEvent(input$SubmitButton, {
+    output$Table <- DT::renderDataTable({
+      drink_filter()
+    })
   })
+
   
-  #output$Table <- DT::renderDataTable({
-   # if (!is.null(input$SubmitButton)) {
-    #  datatable(drink_filter())
+  # Output images based on filtered data
+  #output$Images <- renderImage({
+    # Get filtered drinks data
+   # filtered_data <- drink_filter()
+    #images_list <- list()
+    #for (i in 1:nrow(filtered_data)) {
+      # Add image to images list for each row
+     # image_path <- filtered_data[i, "image"]
+    #  image <- list(src = image_path, width = 400, height = 400)
+    #  images_list[[i]] <- image
     #}
-  #})
+    # Return images list
+    #images_list
+  #}, deleteFile = FALSE)
+  
+
+  
+
+  
 }
 
 # Run the app
@@ -158,6 +166,6 @@ shinyApp(ui = ui, server = server)
 
 ## Steps to do in code
 # 1. Fix table output for flavors radio box (complete)
-# 2. Verify output is filtered accurately
-# 3. Set up table to only show when submit button is clicked
+# 2. Verify output is filtered accurately (complete)
+# 3. Set up table to only show when submit button is clicked (complete)
 # 4. Transition table output to image output
