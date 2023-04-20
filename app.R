@@ -36,21 +36,6 @@ sidebarLayout(
     
     #flavors input
     uiOutput("FlavorsRadiobox"),
-   
-    #sweetness slider
-    #sliderInput(inputId = "Sweetness",
-    #            label = "Choose your preferred level of sweetness:",
-    #            min = 1,
-    #            max = 5,
-    #            value = 3,), #step = 1
-    #uiOutput("Sweetness"),
-    
-    #flavors input
-    #checkboxGroupInput(inputId = "Flavors",
-    #                   label = "Choose any flavors you would prefer:",
-    #                   choices = unique(unlist(strsplit(data$Flavors, ", ")))),
-                      #had to remove "," in column for each flavor
-    #uiOutput("Flavors"),
     
     #submit button that looks like martini glass
     uiOutput("SubmitButton")
@@ -138,8 +123,7 @@ server <- function(input, output) {
     }
     
     if (!is.null(input$FlavorsRadiobox)) {
-      flavors <- unlist(strsplit(as.character(filtered$Flavors), ","))
-      filtered <- filtered[apply(sapply(input$FlavorsRadiobox, function(x) grepl(x, Flavors)), 1, any),]
+      filtered <- filtered[str_detect(filtered$Flavors, input$FlavorsRadiobox),]
     }
     #Adds column of image path to remaining drinks
     filtered$image <- paste0("www/", filtered$Name, ".jpg")
@@ -173,7 +157,7 @@ server <- function(input, output) {
 shinyApp(ui = ui, server = server)
 
 ## Steps to do in code
-# 1. Fix table output for flavors radio box
+# 1. Fix table output for flavors radio box (complete)
 # 2. Verify output is filtered accurately
 # 3. Set up table to only show when submit button is clicked
 # 4. Transition table output to image output
