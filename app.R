@@ -3,6 +3,7 @@ library(shiny)
 library(readxl)
 library(tidyverse)
 library(jpeg)
+library(DT)
 
 #load data
 data <- read_excel("ProjectData.xlsx")
@@ -21,279 +22,158 @@ sidebarLayout(
     checkboxGroupInput(inputId="Alcohol",
                        label="Choose your alcohol preference(s). If you have no preference, check all boxes:",
                        choices=c("Vodka", "Gin", "Rum", "Tequila", "Whiskey")),
-   
+                       #could add unique(data$Alcohol)
+    
+    #sweetness button
+    actionButton(inputId = "SweetnessButton", label = "Select a sweetness Level"),
+    
     #sweetness slider
-    sliderInput(inputId = "Sweetness",
-                label = "Choose your preferred level of sweetness:",
-                min = 1,
-                max = 5,
-                value = 3),
+    uiOutput("SweetnessSlider"),
+    
+    #flavors button
+    uiOutput("FlavorsButton"),
+    #actionButton(inputId = "FlavorsButton", label = "Select a flavor"),
     
     #flavors input
-    checkboxGroupInput(inputId = "Flavors",
-                       label = "Choose any flavors you would prefer:",
-                       choices = unique(unlist(strsplit(data$Flavors, ", ")))),
+    uiOutput("FlavorsRadiobox"),
+   
+    #sweetness slider
+    #sliderInput(inputId = "Sweetness",
+    #            label = "Choose your preferred level of sweetness:",
+    #            min = 1,
+    #            max = 5,
+    #            value = 3,), #step = 1
+    #uiOutput("Sweetness"),
+    
+    #flavors input
+    #checkboxGroupInput(inputId = "Flavors",
+    #                   label = "Choose any flavors you would prefer:",
+    #                   choices = unique(unlist(strsplit(data$Flavors, ", ")))),
                       #had to remove "," in column for each flavor
+    #uiOutput("Flavors"),
     
     #submit button that looks like martini glass
-    submitButton(text = "Find Drinks", icon = icon(name = "martini-glass-citrus"))
+    uiOutput("SubmitButton")
+    #submitButton(text = "Find Drinks", icon = icon(name = "martini-glass-citrus"))
     
   ),
   #main panel for displaying outputs
   mainPanel(
     #imageOutput("Images")
-    tableOutput("Table")
+    #tableOutput("Table")
     
+    DT::dataTableOutput("Table")
   )
 )
 )
 
-#define server logic
+# Define server function
 server <- function(input, output) {
+  
+  # Present sweetness slider when the SweetnessButton is clicked
+  observeEvent(input$SweetnessButton, {
+    # Filter data based on selected alcohol
+    filtered_data <- data
+    if (!is.null(input$Alcohol)) {
+      filtered_data <- filtered_data %>% filter(Alcohol %in% input$Alcohol)
+    }
     
-    drink_filter <- reactive({
-      
-    #alcohol type filter
-    data <- if(!"Vodka"%in%input$Alcohol){
-      data <- data %>% filter(!grepl("Vodka", Alcohol))
-    }else{data <- data}
-    data <- if(!"Gin"%in%input$Alcohol){
-      data <- data %>% filter(!grepl("Gin", Alcohol))
-    }else{data <- data}
-    data <- if(!"Rum"%in%input$Alcohol){
-      data <- data %>% filter(!grepl("Rum", Alcohol))
-    }else{data <- data}
-    data <- if(!"Tequila"%in%input$Alcohol){
-      data <- data %>% filter(!grepl("Tequila", Alcohol))
-    }else{data <- data}
-    data <- if(!"Whiskey"%in%input$Alcohol){
-      data <- data %>% filter(!grepl("Whiskey", Alcohol))
-    }else{data <- data}
-    
-    #sweetness filter
-    data <- if(input$Sweetness==1){
-      data <- data %>% filter(Sweetness<3)
-    }else{data <- data}
-    data <- if(input$Sweetness==2){
-      data <- data %>% filter(Sweetness<4)
-    }else{data <- data}
-    data <- if(input$Sweetness==3){
-      data <- data %>% filter(Sweetness!=1 & Sweetness!=5)
-    }else{data <- data}
-    data <- if(input$Sweetness==4){
-      data <- data %>% filter(Sweetness>3)
-    }else{data <- data}
-    data <- if(input$Sweetness==5){
-      data <- data %>% filter(Sweetness>4)
-    }else{data <- data}
-    
-    
-    #flavor filter
-    data <- if(!"Orange"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Orange", Flavors))
-    }else{data <- data}
-    data <- if(!"Lime"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Lime", Flavors))
-    }else{data <- data}
-    data <- if(!"Lemon"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Lemon", Flavors))
-    }else{data <- data}
-    data <- if(!"Cranberry"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Cranberry", Flavors))
-    }else{data <- data}
-    data <- if(!"Tomato"%in%input$Flavors & !"Hot Sauce"%in%input$Flavors & !"Pepper"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Tomato", Flavors)) %>% filter(!grepl("Hot Sauce", Flavors)) %>% filter(!grepl("Pepper", Flavors))
-    }else{data <- data}
-    data <- if(!"Ginger"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Ginger", Flavors))
-    }else{data <- data}
-    data <- if(!"Coffee"%in%input$Flavors & !"Chocolate"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Coffee", Flavors)) %>% filter(!grepl("Chocolate", Flavors))
-    }else{data <- data}
-    data <- if(!"Grapefruit"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Grapefruit", Flavors))
-    }else{data <- data}
-    data <- if(!"Herbal"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Herbal", Flavors))
-    }else{data <- data}
-    data <- if(!"Cherry"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Cherry", Flavors))
-    }else{data <- data}
-    data <- if(!"Bitter"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Bitter", Flavors))
-    }else{data <- data}
-    data <- if(!"Spiced"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Spiced", Flavors))
-    }else{data <- data}
-    data <- if(!"Violet"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Violet", Flavors))
-    }else{data <- data}
-    data <- if(!"Banana"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Banana", Flavors))
-    }else{data <- data}
-    data <- if(!"Blackberry"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Blackberry", Flavors))
-    }else{data <- data}
-    data <- if(!"Pineapple"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Pineapple", Flavors))
-    }else{data <- data}
-    data <- if(!"Coconut"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Coconut", Flavors))
-    }else{data <- data}
-    data <- if(!"Almond"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Almond", Flavors))
-    }else{data <- data}
-    data <- if(!"Mint"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Mint", Flavors))
-    }else{data <- data}
-    data <- if(!"Pomegranite"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Pomegranite", Flavors))
-    }else{data <- data}
-    data <- if(!"Licorice"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Licorice", Flavors))
-    }else{data <- data}
-    data <- if(!"Honey"%in%input$Flavors){
-      data <- data %>% filter(!grepl("Honey", Flavors))
-    }else{data <- data}
-    
+    # Update sweetness slider
+    output$SweetnessSlider <- renderUI({
+      sliderInput(inputId = "SweetnessSlider",
+                  label = "Choose your preferred level of sweetness:",
+                  min = min(filtered_data$Sweetness),
+                  max = max(filtered_data$Sweetness),
+                  value = round(mean(range(filtered_data$Sweetness))),
+                  step = 1)
     })
     
-    output$Table <- renderTable({
-      drink_filter()
+    # present flavors button
+    output$FlavorsButton <- renderUI({
+      actionButton(inputId = "FlavorsButton", label = "Select a flavor")
     })
+  })
+  
+  # Update available flavors when flavors button is chosen
+  observeEvent(input$FlavorsButton, {
     
+    # Filter available flavors based on selected alcohol and sweetness
+    filtered_data <- data
+    if (!is.null(input$Alcohol)) {
+      filtered_data <- filtered_data %>% filter(Alcohol %in% input$Alcohol)
+    }
     
-    #build output list for cocktail images
+    # Sweetness + or - 1
+    if (!is.null(input$SweetnessSlider)) {
+      filtered_data <- filtered_data[filtered_data$Sweetness >= (input$SweetnessSlider - 1) & filtered_data$Sweetness <= (input$SweetnessSlider + 1),]
+    }
     
-    cocktails <- list()
+    # Get list of available flavors based on filtered data
+    flavors <- unique(unlist(strsplit(filtered_data$Flavors, ", ")))
     
-    cocktails <- if("Cosmopolitan"%in%data$Name){
-      cocktails <- append(cocktails,"www/image1.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Bloody Mary"%in%data$Name){
-      cocktails <- append(cocktails,"www/image2.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Moscow Mule"%in%data$Name){
-      cocktails <- append(cocktails,"www/image3.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Lemon Drop Martini"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-3.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Espresso Martini"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-4.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Sea Breeze"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-5.jpg")
-    }else{cocktails <- cocktails}
+    output$FlavorsRadiobox <- renderUI({
+      radioButtons("FlavorsRadiobox", "Choose any flavors you would prefer:", choices = flavors)
+    }) # maybe do drop down menu
     
-    cocktails <- if("Gimlet"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-6.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Last Word"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-7.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Negroni"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-8.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("French 75"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-9.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Aviation"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-10.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Tom Collins"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-11.jpg")
-    }else{cocktails <- cocktails}
+    output$SubmitButton <- renderUI({
+      submitButton(text = "Find Drinks", icon = icon(name = "martini-glass-citrus"))
+    })
+  })
+  
+  
+  drink_filter <- reactive({
+    #eventReactive(input$SubmitButton, {
+  
+    # Initialize reactive values to store input values
+    #vals <- reactiveValues(Alcohol = NULL, Sweetness = NULL, Flavors = NULL)
     
-    cocktails <- if("Dark and Stormy"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-12.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Rum Runner"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-13.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Daiquiri"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-14.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Pina Colada"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-15.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Mai Tai"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-16.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Mojito"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-17.jpg")
-    }else{cocktails <- cocktails}
+    # Filter cocktails based on user preferences
+    filtered <- data
+    if (!is.null(input$Alcohol)) {
+      filtered <- filtered[filtered$Alcohol %in% input$Alcohol,]
+    }
     
-    cocktails <- if("Margarita"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-18.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Paloma"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-19.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Tequila Sunrise"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-20.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("El Diablo"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-21.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Naked and Famous"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-22.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Bloody Maria"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-23.jpg")
-    }else{cocktails <- cocktails}
+    if (!is.null(input$SweetnessSlider)) {
+      filtered <- filtered[filtered$Sweetness >= (input$SweetnessSlider - 1) & filtered$Sweetness <= (input$SweetnessSlider + 1),]
+    }
     
-    cocktails <- if("Manhattan"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-24.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Old Fashioned"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-25.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Sazerac"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-26.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Mint Julep"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-27.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Penicillin"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-28.jpg")
-    }else{cocktails <- cocktails}
-    cocktails <- if("Paper Plane"%in%data$Name){
-      cocktails <- append(cocktails,"www/p1gtketd9rtqdqmj1rar8m41qh54-29.jpg")
-    }else{cocktails <- cocktails}
+    if (!is.null(input$FlavorsRadiobox)) {
+      flavors <- unlist(strsplit(as.character(filtered$Flavors), ","))
+      filtered <- filtered[apply(sapply(input$FlavorsRadiobox, function(x) grepl(x, Flavors)), 1, any),]
+    }
+    #Adds column of image path to remaining drinks
+    filtered$image <- paste0("www/", filtered$Name, ".jpg")
     
+    filtered
+    #return(filtered)
     
-    #observe({
-    #for (i in 1:length(cocktails)){
-      #local({
-      #j <- i
-     # Images = cocktails[[j]]
-    #  output[[Images]] <- renderImage({
-   #   list(src=cocktails[[j]], width=500, height=300)
-  #}, deleteFile=FALSE)
-     # })
+    # Problem: Does not return drinks after flavor picked
+    
+  })
+  
+  # Update input values when submit button is clicked
+  #observeEvent(input$SubmitButton, {
+    #vals$Alcohol <- input$Alcohol
+    #vals$Sweetness <- input$Sweetness
+    #vals$Flavors <- input$Flavors
+  #})
+  
+  output$Table <- DT::renderDataTable({
+    drink_filter()
+  })
+  
+  #output$Table <- DT::renderDataTable({
+   # if (!is.null(input$SubmitButton)) {
+    #  datatable(drink_filter())
     #}
-    #})
-    
-    
-    #output$Images <- renderUI({
-     # imageList <-
-    #    lapply(1:length(cocktails),
-     #          function(i){
-      #           Images = cocktails[[i]]
-       #          imageOutput(Images)
-        #       })
-      #do.call(tagList, imageList)
-    #})
-    
-    #i <- 1
-    #for (i in 1:length(cocktails)){
-     # output$Images <- renderImage({
-      #  list(src=cocktails[[i]], width=550, height=330)
-      #}, deleteFile=FALSE)
-    #}
+  #})
 }
 
-  
-#Run the app
-shinyApp(ui, server)
+# Run the app
+shinyApp(ui = ui, server = server)
+
+## Steps to do in code
+# 1. Fix table output for flavors radio box
+# 2. Verify output is filtered accurately
+# 3. Set up table to only show when submit button is clicked
+# 4. Transition table output to image output
