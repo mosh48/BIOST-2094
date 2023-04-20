@@ -138,6 +138,19 @@ server <- function(input, output) {
       drink_filter()
     })
   })
+  
+  #observeEvent(input$SubmitButton, {
+   # output$Image <- renderUI({
+    #  drink_images <- drink_filter()$image_url
+     # if (length(drink_images) == 0) {
+      #  return(NULL)
+      #} else {
+       # lapply(drink_images, function(url) {
+        #  tags$img(src = url, width = "200px", height = "200px")
+        #})
+      #}
+    #})
+  #})
 
   
   # Output images based on filtered data
