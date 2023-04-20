@@ -34,7 +34,7 @@ sidebarLayout(
     uiOutput("FlavorsButton"),
     
     #flavors input
-    uiOutput("FlavorsRadiobox"),
+    uiOutput("FlavorsCheckbox"),
     
     #submit button that looks like martini glass
     uiOutput("SubmitButton")
@@ -94,8 +94,8 @@ server <- function(input, output) {
     # Get list of available flavors based on filtered data
     flavors <- unique(unlist(strsplit(filtered_data$Flavors, ", ")))
     
-    output$FlavorsRadiobox <- renderUI({
-      radioButtons("FlavorsRadiobox", "Choose any flavors you would prefer:", choices = flavors)
+    output$FlavorsCheckbox <- renderUI({
+      checkboxGroupInput("FlavorsCheckbox", "Choose any flavors you would prefer:", choices = flavors)
     }) # maybe do drop down menu
     
     # present submit button
@@ -120,15 +120,25 @@ server <- function(input, output) {
       filtered <- filtered[filtered$Sweetness >= (input$SweetnessSlider - 1) & filtered$Sweetness <= (input$SweetnessSlider + 1),]
     }
     
-    if (!is.null(input$FlavorsRadiobox)) {
-      filtered <- filtered[str_detect(filtered$Flavors, input$FlavorsRadiobox),]
+    if (!is.null(input$FlavorsCheckbox)) {
+      # get list of marked flavors from user
+      selected_flavors <- input$FlavorsCheckbox
+      
+      # split comma-separated flavors into separate strings
+      split_flavors <- str_split(filtered$Flavors, ",\\s*")
+      
+      # check if any of the selected flavors are present in each row
+      selected_rows <- sapply(split_flavors, function(flavors) any(flavors %in% selected_flavors))
+      
+      # filter dataset to include selected rows
+      filtered_data <- filtered[selected_rows, ]
     }
     
     #Adds column of image path to remaining drinks
     #filtered$image <- paste0("www/", filtered$Name, ".jpg")
     
     #filtered <- data[data$image != "", ]
-    filtered
+    filtered_data
     
   })
   
