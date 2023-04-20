@@ -7,6 +7,8 @@ library(jpeg)
 #load data
 data <- read_excel("ProjectData.xlsx")
 Flavors <- unique(unlist(strsplit(data$Flavors, ", ")))
+#Adds column of image path to drinks
+data$image <- paste0("www/", data$Name, ".jpg")
 
 #define UI
 ui <- fluidPage(
