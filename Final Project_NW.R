@@ -59,7 +59,7 @@ ui <- fluidPage(
     mainPanel(
       #imageOutput("Images")
       
-      DT::dataTableOutput("Table"),
+      #DT::dataTableOutput("Table"),
       
       uiOutput("Images")
     )
@@ -173,11 +173,11 @@ server <- function(input, output) {
   })
   
   # output table when submit button clicked
-  observeEvent(input$SubmitButton, {
-    output$Table <- renderDataTable({
-      drink_filter()
-    })
-  })
+  #observeEvent(input$SubmitButton, {
+   # output$Table <- renderDataTable({
+    #  drink_filter()
+    #})
+  #})
   
   
   

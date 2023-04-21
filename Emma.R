@@ -66,8 +66,7 @@ ui <- fluidPage(
 #define server logic
 server <- function(input, output) {
   
-  reactive({
-    
+    drink_filter <- reactive({
     #alcohol type filter
     data <- if(!"Vodka"%in%input$Alcohol){
       data <- data %>% filter(!grepl("Vodka", Alcohol))
@@ -170,13 +169,13 @@ server <- function(input, output) {
     data <- if(!"Honey"%in%input$Flavors){
       data <- data %>% filter(!grepl("Honey", Flavors))
     }else{data <- data}
-    
+    })
+  
+  output$Table <- renderTable({
+  drink_filter()
   })
   
-  #output$Table <- renderTable({
-  #drink_filter()
-  #})
-  
+  #data <- drink_filter()
   
   #build output list for cocktail images
   
@@ -278,40 +277,42 @@ server <- function(input, output) {
   }else{cocktails <- cocktails}
   
   
-  observe({
-    for (i in 1:length(cocktails))
-      {
-        print(i)
-        local({
-          j <- i
-            Images = paste0("img", j)
-            print(Images)
-            output[[Images]] <- renderImage({
-              list(src = file.path(cocktails[[j]]), width=500, height=300)
-            }, deleteFile=FALSE)
-        })
-    }
-  })
-  
-  
-  output$Images <- renderUI({
-   imageList <-
-      lapply(1:length(cocktails),
-            function(i)
-              {
-             Images = paste0("img",i)
-             imageOutput(Images)
+   observe({
+     for (i in 1:length(cocktails))
+       {
+         print(i)
+         local({
+           j <- i
+             Images = paste0("img", j)
+             print(Images)
+             output[[Images]] <- renderImage({
+               list(src = file.path(cocktails[[j]]), width=500, height=300)
+             }, deleteFile=FALSE)
          })
-  do.call(tagList, imageList)
-  })
+     }
+   })
   
+  
+   output$Images <- renderUI({
+    imageList <-
+       lapply(1:length(cocktails),
+             function(i)
+               {
+              Images = paste0("img",i)
+              imageOutput(Images)
+          })
+   do.call(tagList, imageList)
+   })
+
+
+
   #i <- 1
   #for (i in 1:length(cocktails)){
     #output$Images <- renderImage({
       #list(src=cocktails[[5]], width=550, height=330)
     #}, deleteFile=FALSE)
  # }
-  
+
 }
 
 
