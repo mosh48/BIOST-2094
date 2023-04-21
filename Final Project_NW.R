@@ -1,27 +1,25 @@
+#BIOST 2094 Final Project
+#Cocktail Recommender
+#Li Fan, Emma Lipinski, Nick Moshgat, Nuo Wei
 
+#load packages
 library(shiny)
 library(readxl)
 library(tidyverse)
 library(jpeg)
 library(DT)
 
-
-#load shiny and readxl packages
-
-#images
+#set working directory
 setwd("E:/University of Pittsburgh/BIOST 2094 Advanced R Computing/Project/")
 
-#load data
+#load data and add row numbers
 data <- read_excel("ProjectData.xlsx")
 data <- data %>% mutate(row_number = row_number())
-
 
 
 #load flavors options
 Flavors_options <- unlist(strsplit(data$Flavors, ", "))
 Flavors_options <- c("No Preference" , Flavors_options)
-
-
 
 
 #define UI
@@ -36,11 +34,10 @@ ui <- fluidPage(
       #alcohol type input
       checkboxGroupInput(inputId="Alcohol",
                          label="Choose your alcohol preference(s). If you have no preference, check all boxes:",
-                         choices=c("Vodka", "Gin", "Rum", "Tequila", "Whiskey")),
-      #could add unique(data$Alcohol)
+                         choices=unique(data$Alcohol)),
       
       #sweetness button
-      actionButton(inputId = "SweetnessButton", label = "Select a sweetness Level"),
+      actionButton(inputId = "SweetnessButton", label = "Next: Select a Sweetness Level"),
       
       #sweetness slider
       uiOutput("SweetnessSlider"),
@@ -57,31 +54,21 @@ ui <- fluidPage(
     ),
     #main panel for displaying outputs
     mainPanel(
-      #imageOutput("Images")
       
       #DT::dataTableOutput("Table"),
-      
       uiOutput("Images")
+      
     )
   )
 )
 
-
-
-
-
-
-
 #define server logic
-
 server <- function(input, output) {
   
   # Present sweetness slider when the SweetnessButton is clicked
   observeEvent(input$SweetnessButton, {
     
     # Filter data based on selected alcohol
-    #filtered_data <- data
-    
     if (!is.null(input$Alcohol)) {
       data <- data %>% filter(Alcohol %in% input$Alcohol)
     }
@@ -98,20 +85,17 @@ server <- function(input, output) {
     
     # present flavors button
     output$FlavorsButton <- renderUI({
-      actionButton(inputId = "FlavorsButton", label = "Select a flavor")
+      actionButton(inputId = "FlavorsButton", label = "Next: Select Flavors")
     })
     
     
   })
   
   
-  
-  
   # Update available flavors when flavors button is chosen
   observeEvent(input$FlavorsButton, {
     
     # Filter available flavors based on selected alcohol and sweetness
-    #filtered_data <- data
     if (!is.null(input$Alcohol)) {
       data <- data %>% filter(Alcohol %in% input$Alcohol)
     }
@@ -125,8 +109,8 @@ server <- function(input, output) {
     flavors <- unique(unlist(strsplit(data$Flavors, ", ")))
     
     output$FlavorsCheckbox <- renderUI({
-      checkboxGroupInput("FlavorsCheckbox", "Choose any flavors you would prefer:", choices = flavors)
-    }) # maybe do drop down menu
+      checkboxGroupInput("FlavorsCheckbox", "Choose any preferred flavors:", choices = flavors)
+    }) 
     
     # present submit button
     output$SubmitButton <- renderUI({
@@ -137,11 +121,7 @@ server <- function(input, output) {
   
   drink_filter <- reactive({
     
-    #Adds column of image path to remaining drinks
-    #data$image <- paste0("www/", data$Name, ".jpg")
-    
     # Filter cocktails based on user preferences
-    #filtered <- data
     if (!is.null(input$Alcohol)) {
       data <- data[data$Alcohol %in% input$Alcohol,]
     }
@@ -163,13 +143,7 @@ server <- function(input, output) {
       # filter dataset to include selected rows
       data <- data[selected_rows, ]
     }
-    
-    #Adds column of image path to remaining drinks
-    #filtered$image <- paste0("www/", filtered$Name, ".jpg")
-    
-    #filtered <- data[data$image != "", ]
     data
-    
   })
   
   # output table when submit button clicked
@@ -184,9 +158,8 @@ server <- function(input, output) {
   observeEvent(input$SubmitButton, {
     for (i in drink_filter()$row_number){
       local({
-        j <- i
-        Images = paste0(j, ".jpg")
-        #print(Images)
+        
+        Images = paste0(i, ".jpg")
         
         output[[Images]] <- renderImage({
           
