@@ -10,7 +10,7 @@ library(jpeg)
 library(DT)
 
 #set working directory
-setwd("E:/University of Pittsburgh/BIOST 2094 Advanced R Computing/Project/")
+#setwd("E:/University of Pittsburgh/BIOST 2094 Advanced R Computing/Project/")
 
 #load data and add row numbers
 data <- read_excel("ProjectData.xlsx")
@@ -55,7 +55,7 @@ ui <- fluidPage(
     #main panel for displaying outputs
     mainPanel(
       
-      #DT::dataTableOutput("Table"),
+      DT::dataTableOutput("Table"),
       uiOutput("Images")
       
     )
@@ -147,11 +147,13 @@ server <- function(input, output) {
   })
   
   # output table when submit button clicked
-  #observeEvent(input$SubmitButton, {
-   # output$Table <- renderDataTable({
-    #  drink_filter()
-    #})
-  #})
+  observeEvent(input$SubmitButton, {
+    final_data <- drink_filter()
+    table <- final_data %>% select(-row_number)
+    output$Table <- renderDataTable({
+      table
+    })
+  })
   
   
   
