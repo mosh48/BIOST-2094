@@ -85,7 +85,7 @@ server <- function(input, output) {
     
     # present flavors button
     output$FlavorsButton <- renderUI({
-      actionButton(inputId = "FlavorsButton", label = "Next: Select Flavors to Exclude")
+      actionButton(inputId = "FlavorsButton", label = "Next: Select Flavors")
     })
     
     
@@ -109,7 +109,7 @@ server <- function(input, output) {
     flavors <- unique(unlist(strsplit(data$Flavors, ", ")))
     
     output$FlavorsCheckbox <- renderUI({
-      checkboxGroupInput("FlavorsCheckbox", "Choose flavors that you do NOT like:", choices = flavors)
+      checkboxGroupInput("FlavorsCheckbox", "Choose flavors that you prefer:", choices = flavors)
     }) 
     
     # present submit button
@@ -141,7 +141,7 @@ server <- function(input, output) {
       selected_rows <- sapply(split_flavors, function(flavors) any(flavors %in% selected_flavors))
       
       # filter dataset to exclude selected rows
-      data <- data[!selected_rows, ]
+      data <- data[selected_rows, ]
     }
     data
   })
