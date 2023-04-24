@@ -6,7 +6,6 @@
 library(shiny)
 library(readxl)
 library(tidyverse)
-library(jpeg)
 library(DT)
 
 #set working directory
