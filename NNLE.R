@@ -184,8 +184,3 @@ server <- function(input, output) {
 # Run the app
 shinyApp(ui = ui, server = server)
 
-## Steps to do in code
-# 1. Fix table output for flavors radio box (complete)
-# 2. Verify output is filtered accurately (complete)
-# 3. Set up table to only show when submit button is clicked (complete)
-# 4. Transition table output to image output
