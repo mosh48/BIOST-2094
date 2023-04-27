@@ -22,44 +22,57 @@ Flavors_options <- c("No Preference" , Flavors_options)
 
 
 #define UI
-ui <- fluidPage(
-  #app title
-  titlePanel("Drink Finder: A Personalized Cocktail Recommender"),
-  
-  #input definitions
-  sidebarLayout(
-    
-    sidebarPanel(
-      #alcohol type input
-      checkboxGroupInput(inputId="Alcohol",
-                         label="Choose your alcohol preference(s). If you have no preference, check all boxes:",
-                         choices=unique(data$Alcohol)),
-      
-      #sweetness button
-      actionButton(inputId = "SweetnessButton", label = "Next: Select a Sweetness Level"),
-      
-      #sweetness slider
-      uiOutput("SweetnessSlider"),
-      
-      #flavors button
-      uiOutput("FlavorsButton"),
-      
-      #flavors input
-      uiOutput("FlavorsCheckbox"),
-      
-      #submit button that looks like martini glass
-      uiOutput("SubmitButton")
-      
-    ),
-    #main panel for displaying outputs
-    mainPanel(
-      
-      DT::dataTableOutput("Table"),
-      uiOutput("Images")
-      
-    )
-  )
+ui <- navbarPage("Drink Finder",
+                 tabPanel("A Personalized Cocktail Recommender",
+                          #input definitions
+                          sidebarLayout(
+                            
+                            sidebarPanel(
+                              #alcohol type input
+                              checkboxGroupInput(inputId="Alcohol",
+                                                 label="Choose your alcohol preference(s). If you have no preference, check all boxes:",
+                                                 choices=unique(data$Alcohol)),
+                              
+                              #sweetness button
+                              actionButton(inputId = "SweetnessButton", label = "Next: Select a Sweetness Level"),
+                              
+                              #sweetness slider
+                              uiOutput("SweetnessSlider"),
+                              
+                              #flavors button
+                              uiOutput("FlavorsButton"),
+                              
+                              #flavors input
+                              uiOutput("FlavorsCheckbox"),
+                              
+                              #submit button that looks like martini glass
+                              uiOutput("SubmitButton")
+                              
+                              ,width = 2),
+                            
+                            
+                            
+                            
+                            
+                            #main panel for displaying outputs
+                            mainPanel(
+                              uiOutput("Images")
+                              
+                            )
+                            
+                          )
+                          
+                          
+                          
+                 ),
+                 tabPanel("Table",
+                          DT::dataTableOutput("Table")
+                 )
+                 
+                 
 )
+
+
 
 #define server logic
 server <- function(input, output) {
@@ -147,16 +160,26 @@ server <- function(input, output) {
   
   # output table when submit button clicked
   observeEvent(input$SubmitButton, {
+    
+    
     final_data <- drink_filter()
     table <- final_data %>% select(-row_number)
+    
+    
+    
     output$Table <- renderDataTable({
       table
     })
+    
+    
+    
+    
+    
   })
   
-  
-  
   observeEvent(input$SubmitButton, {
+    
+    
     for (i in drink_filter()$row_number){
       local({
         
@@ -172,7 +195,7 @@ server <- function(input, output) {
     }
     
     
-  })
+  
   
   output$Images <- renderUI({
     
@@ -180,13 +203,14 @@ server <- function(input, output) {
       lapply(drink_filter()$row_number,
              function(i){
                imagename = paste0(i, ".jpg")
-               imageOutput(imagename)
+               imageOutput(imagename,inline = TRUE)
              })
     
-    do.call(tagList, image_output_list)
   })
+  
+  })
+  
+  
 }
 
-
 shinyApp(ui = ui, server = server)
-
