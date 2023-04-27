@@ -48,7 +48,7 @@ ui <- navbarPage("Drink Finder",
                               #submit button that looks like martini glass
                               uiOutput("SubmitButton")
                               
-                              ,width = 2),
+                              ,width = 4),
                             
                             
                             
